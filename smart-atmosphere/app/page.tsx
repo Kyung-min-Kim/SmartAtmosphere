@@ -1,65 +1,144 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useState } from "react";
+import styles from "./page.module.css";
+import { Home, MessageCircle, Clock, Smartphone } from "lucide-react";
 
-export default function Home() {
+export default function HomePage() {
+  const [weather, setWeather] = useState<{
+    city: string;
+    temp: number | null;
+    humidity: number | null;
+    condition: string;
+  }>({
+    city: "위치 확인 중...",
+    temp: null,
+    humidity: null,
+    condition: "",
+  });
+
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
+          const res = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&lang=kr&appid=${apiKey}`
+          );
+          const data = await res.json();
+
+          setWeather({
+            city: data?.name ?? "알 수 없음",
+            temp: data?.main?.temp ?? null,
+            humidity: data?.main?.humidity ?? null,
+            condition: data?.weather?.[0]?.description ?? "",
+          });
+        } catch (err) {
+          console.error("날씨 API 오류:", err);
+        }
+      },
+      (err) => console.error("위치 접근 거부됨:", err),
+      { enableHighAccuracy: true }
+    );
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className={styles.screen}>
+      <header className={styles.header}>
+        <div className={styles.headerLeft}>
+          <div className={styles.userNameRow}>
+            <span className={styles.userLabel}>사용자 님</span>
+          </div>
+        </div>
+        <div className={styles.headerRight}>
+          <button className={styles.iconButton}>+</button>
+          <button className={styles.iconButton}>
+            <span className={styles.menuLines} />
+          </button>
+        </div>
+      </header>
+
+      <main className={styles.main}>
+        <section className={styles.section}>
+          <div className={styles.statusBar}>
+            <div className={styles.statusPill}>{weather.city}</div>
+            <div className={styles.statusPill}>
+              {weather.temp !== null ? `${weather.temp.toFixed(1)}℃` : "-"}
+            </div>
+            <div className={styles.statusPill}>
+              {weather.condition ? weather.condition : "날씨 정보 없음"}
+            </div>
+            <div className={styles.statusPill}>
+              {weather.humidity !== null ? `습도 ${weather.humidity}%` : "-"}
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>사용자님의 정보</h2>
+          <p className={styles.sectionSubtitle}>
+            아직 수집된 데이터가 없습니다. Smart Atmosphere를 사용하면 감정,
+            선호 색상, 주요 활동, 음악 취향이 여기에 표시됩니다.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <div className={styles.insightCard}>
+            <div>
+              <div className={styles.insightColumnTitle}>감정</div>
+              <div className={styles.insightPlaceholder}>데이터 없음</div>
+
+              <div className={styles.insightColumnTitle}>선호 색상</div>
+              <div className={styles.insightPlaceholder}>데이터 없음</div>
+            </div>
+            <div>
+              <div className={styles.insightColumnTitle}>주요 활동</div>
+              <div className={styles.insightPlaceholder}>데이터 없음</div>
+
+              <div className={styles.insightColumnTitle}>음악 취향</div>
+              <div className={styles.insightPlaceholder}>데이터 없음</div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>이전 스마트톡</h2>
+          <div className={styles.talkList}>
+            <article className={styles.talkItem}>
+              <div className={styles.talkDate}>수요일 · 30</div>
+              <div className={styles.talkText}>
+                비 오는 날 독서에 맞는 분위기
+              </div>
+            </article>
+            <article className={styles.talkItem}>
+              <div className={styles.talkDate}>월요일 · 28</div>
+              <div className={styles.talkText}>친구들과 홈파티 준비</div>
+            </article>
+            <article className={styles.talkItem}>
+              <div className={styles.talkDate}>일요일 · 27</div>
+              <div className={styles.talkText}>여행 준비에 어울리는 분위기</div>
+            </article>
+          </div>
+        </section>
       </main>
+
+      <nav className={styles.navbar}>
+        <button className={`${styles.navItem} ${styles.navItemActive}`}>
+          <Home size={20} strokeWidth={2} />
+          <span>홈</span>
+        </button>
+        <button className={styles.navItem}>
+          <MessageCircle size={20} strokeWidth={2} />
+          <span>스마트톡</span>
+        </button>
+        <button className={styles.navItem}>
+          <Clock size={20} strokeWidth={2} />
+          <span>내 루틴</span>
+        </button>
+        <button className={styles.navItem}>
+          <Smartphone size={20} strokeWidth={2} />
+          <span>디바이스</span>
+        </button>
+      </nav>
     </div>
   );
 }
