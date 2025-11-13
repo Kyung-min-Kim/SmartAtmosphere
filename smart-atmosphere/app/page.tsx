@@ -284,25 +284,6 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-
-      <nav className={styles.navbar}>
-        <button className={`${styles.navItem} ${styles.navItemActive}`}>
-          <Home size={20} strokeWidth={2} />
-          <span>홈</span>
-        </button>
-        <button className={styles.navItem}>
-          <MessageCircle size={20} strokeWidth={2} />
-          <span>스마트톡</span>
-        </button>
-        <button className={styles.navItem}>
-          <Clock size={20} strokeWidth={2} />
-          <span>내 루틴</span>
-        </button>
-        <button className={styles.navItem}>
-          <Smartphone size={20} strokeWidth={2} />
-          <span>디바이스</span>
-        </button>
-      </nav>
     </div>
   );
 }
