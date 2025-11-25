@@ -1,0 +1,83 @@
+.screen {
+  height: 100dvh;
+  width: 45dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 8px 4px 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.chatArea {
+  flex: 1;
+  max-height: 80dvh;
+  overflow-y: auto; /* 세로축 넘칠때 스크롤 자동 */
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 0 140px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.chatArea::-webkit-scrollbar {
+  display: none;
+}
+
+.userMessage {
+  align-self: flex-end; /* 오른쪽 정렬(부모가 flex:1 가지고 있어야함) */
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 16px;
+  border-radius: 16px 16px 0px 16px;
+  max-width: 70%;
+  font-size: 16px;
+}
+
+.aiMessage {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 10px 16px;
+  border-radius: 16px 16px 16px 0px;
+  max-width: 70%;
+  font-size: 16px;
+}
+
+.inputBar {
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.4);
+  display: flex;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+  box-sizing: border-box; /* padding + border까지 포함해서 width를 계산(현재 100%) */
+}
+
+.input {
+  flex: 1;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.sendBtn {
+  padding: 0 16px;
+  background: #98c9b9;
+  color: white;
+  border: none;
+  border-radius: 12px;
+}
