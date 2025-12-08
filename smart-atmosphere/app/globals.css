@@ -36,13 +36,13 @@ body {
   font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
     "Helvetica Neue", sans-serif;
   background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
-  display: flex;
-  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 #__next {
   width: 100%;
-  max-width: 480px;
+  /* max-width: 480px; */
   min-height: 100vh;
   position: relative;
 }
